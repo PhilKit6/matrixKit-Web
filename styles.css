@@ -1,0 +1,36 @@
+body {
+  background-color: #111;
+  color: #eee;
+  font-family: sans-serif;
+  text-align: center;
+}
+h1 {
+  margin-top: 1em;
+  color: #0ff;
+}
+canvas {
+  border: 1px solid #444;
+  display: block;
+  margin: 1em auto;
+}
+.controls {
+  margin-top: 1em;
+}
+label {
+  display: block;
+  margin: 0.5em auto;
+}
+input {
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 0.2em;
+  width: 300px;
+}
+button {
+  background: #0ff;
+  border: none;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  cursor: pointer;
+}

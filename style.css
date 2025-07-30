@@ -1,0 +1,27 @@
+
+body {
+  font-family: sans-serif;
+  background: #111;
+  color: #fff;
+  text-align: center;
+}
+canvas {
+  border: 1px solid #444;
+  display: block;
+  margin: 20px auto;
+}
+.controls {
+  margin-top: 20px;
+}
+input {
+  width: 300px;
+  margin-bottom: 5px;
+}
+button {
+  margin: 5px;
+  padding: 5px 15px;
+  background-color: #444;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

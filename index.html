@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LED Matrix Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>LED Matrix Simulator</h1>
+  <canvas id="ledCanvas" width="640" height="640"></canvas>
+  <div class="controls">
+    <label>R: <input id="r-input" type="text" value="255 * Math.sin((x + t) * 0.1)"/></label><br>
+    <label>G: <input id="g-input" type="text" value="255 * Math.sin((y + t) * 0.1)"/></label><br>
+    <label>B: <input id="b-input" type="text" value="255 * Math.sin((x + y + t) * 0.05)"/></label><br>
+    <button id="submit">Submit</button>
+    <button id="clear">Clear</button>
+    <button id="export">Export</button>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
