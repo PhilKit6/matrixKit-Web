@@ -116,13 +116,13 @@ button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background: linear-gradient(135deg, #0099ff, #2b6ce4);
+  background: linear-gradient(135deg, #20313b, #2b6ce4);
   box-shadow: 0 5px 15px rgba(68,0,255,0.4);
   transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 
 button:hover {
-  background: linear-gradient(135deg, #2b6ce4, #0099ff);
+  background: linear-gradient(135deg, #2b6ce4, #20313b);
 }
 
 button:active {
