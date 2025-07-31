@@ -34,6 +34,8 @@ h1 {
 }
 
 canvas {
+  width: 512px;
+  height: 512px;
   background: #0e101c;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.4);
