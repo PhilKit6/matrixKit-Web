@@ -1,8 +1,9 @@
-
 const canvas = document.getElementById("ledCanvas");
 const ctx = canvas.getContext("2d");
+const LED_COUNT = 32;
 const width = 32, height = 32;
-const pixelSize = 20;
+const pixelSize = canvas.width / LED_COUNT;  // 640 / 32 = 20
+
 let t = 0;
 
 const rInput = document.getElementById("r-input");
@@ -18,7 +19,7 @@ let bExpr = bInput.value;
 
 function preprocessPythonStyle(expr) {
   return expr
-    .replace(/math\./g, 'Math.')
+    .replace(/math\./gi, 'Math.')
     .replace(/\bint\(/g, 'Math.floor(')
     .replace(/\babs\(/g, 'Math.abs(')
     .replace(/\bround\(/g, 'Math.round(')
@@ -30,7 +31,7 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      let scope = {x, y, t};
+      let scope = { x, y, t };
       let r = 0, g = 0, b = 0;
       try {
         r = Math.max(0, Math.min(255, eval(preprocessPythonStyle(rExpr))));
@@ -39,8 +40,14 @@ function draw() {
       } catch (e) {
         r = g = b = 0;
       }
+
+      // Fill the LED
       ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize - 1, pixelSize - 1);
+      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+      // Optional: draw subtle grid for LED separation
+      ctx.strokeStyle = "#111";
+      ctx.strokeRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
     }
   }
   t += 0.1;
@@ -71,9 +78,9 @@ cu.set_brightness(0.5)
 
 def compute_color(x, y, t):
     try:
-        r = ${rInput.value.replace(/math\./g, '').replace(/Math\./g, '')}
-        g = ${gInput.value.replace(/math\./g, '').replace(/Math\./g, '')}
-        b = ${bInput.value.replace(/math\./g, '').replace(/Math\./g, '')}
+        r = ${rInput.value.replace(/math\./gi, '').replace(/Math\./g, '')}
+        g = ${gInput.value.replace(/math\./gi, '').replace(/Math\./g, '')}
+        b = ${bInput.value.replace(/math\./gi, '').replace(/Math\./g, '')}
     except:
         r = g = b = 0
     return max(0, min(255, int(r))), max(0, min(255, int(g))), max(0, min(255, int(b)))
