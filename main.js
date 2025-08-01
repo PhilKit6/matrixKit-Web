@@ -18,13 +18,27 @@ let gExpr = gInput.value;
 let bExpr = bInput.value;
 
 function preprocessPythonStyle(expr) {
-  return expr
-    .replace(/math\./gi, 'Math.')
+  expr = expr
+    .replace(/math\./g, 'Math.')
     .replace(/\bint\(/g, 'Math.floor(')
     .replace(/\babs\(/g, 'Math.abs(')
     .replace(/\bround\(/g, 'Math.round(')
     .replace(/\bmin\(/g, 'Math.min(')
-    .replace(/\bmax\(/g, 'Math.max(');
+    .replace(/\bmax\(/g, 'Math.max(')
+    .replace(/\bpi\b/g, 'Math.PI')
+    .replace(/\be\b/g, 'Math.E');
+    
+  expr = convertPythonTernary(expr);
+  return expr;
+}
+
+
+function convertPythonTernary(expr) {
+  // Regex to convert: <a> if <cond> else <b>
+  return expr.replace(
+    /([^?;]+?)\s+if\s+([^?;]+?)\s+else\s+([^?;]+)/g,
+    '($2) ? ($1) : ($3)'
+  );
 }
 
 function draw() {
