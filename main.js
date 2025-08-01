@@ -26,7 +26,9 @@ function preprocessPythonStyle(expr) {
     .replace(/\bmin\(/g, 'Math.min(')
     .replace(/\bmax\(/g, 'Math.max(')
     .replace(/\bpi\b/g, 'Math.PI')
-    .replace(/\be\b/g, 'Math.E');
+    .replace(/\be\b/g, 'Math.E')
+    .replace(/\band\b/g, '&&')
+    .replace(/\bor\b/g, '||');
     
   expr = convertPythonTernary(expr);
   return expr;
