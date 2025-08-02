@@ -1,5 +1,8 @@
 # MatrixKit‑Web 
 
+<img width="1237" height="643" alt="image" src="https://github.com/user-attachments/assets/4ede0368-21c5-4d9e-b301-888253ffdb64" />
+
+
 > *“If it works first try you aimed too low.”* — Me, after 6 blown MOSFETs ⚡️
 
 Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving your browser (or burning your eyebrows).
