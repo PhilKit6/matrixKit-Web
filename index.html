@@ -3,67 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LED Matrix Simulator</title>
+  <title>LED Matrix Simulator (no‑eval)</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- UMD build exposes a global `math` object -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@13.0.1/lib/browser/math.js"></script>
 </head>
 <body>
   <h1>LED Matrix Simulator</h1>
   <div class="container">
+    <!-- ░░ LEFT ░░ -->
     <div class="left-panel">
       <canvas id="ledCanvas" width="512" height="512"></canvas>
       <div class="controls">
-        <div class="input-group">
-          <label>r =</label>
-          <input id="r-input" type="text" value="255 * Math.sin((x + t) * 0.1)">
+        <div class="input-group"><label>r =</label>
+          <input id="r-input" type="text" value="255 * sin((x + t) * 0.1)">
         </div>
-        <div class="input-group">
-          <label>g =</label>
-          <input id="g-input" type="text" value="255 * Math.sin((y + t) * 0.1)">
+        <div class="input-group"><label>g =</label>
+          <input id="g-input" type="text" value="255 * sin((y + t) * 0.1)">
         </div>
-        <div class="input-group">
-          <label>b =</label>
-          <input id="b-input" type="text" value="255 * Math.sin((x + y + t) * 0.05)">
+        <div class="input-group"><label>b =</label>
+          <input id="b-input" type="text" value="255 * sin((x + y + t) * 0.05)">
         </div>
         <div class="buttons">
           <button id="submit">SUBMIT</button>
           <button id="clear">CLEAR</button>
           <button id="export">EXPORT</button>
         </div>
-        <div class="status-message" id="statusMsg"></div>
-        <div class="error-message" id="errorMsg"></div>
+        <div id="statusMsg"  class="status-message"></div>
+        <div id="errorMsg"   class="error-message"></div>
       </div>
-  
     </div>
+
+    <!-- ░░ RIGHT ░░ -->
     <div class="right-panel">
       <div class="description">
         <p>
           This project is an interactive LED matrix simulator designed to provide a virtual platform for developing animations for LED matrices, specifically Pimoroni's Cosmic Unicorn.
         </p>
         <p>
-          The simulator allows you to experiment with mathematical patterns and colour dynamics. The 32x32 LED grid acts as a virtual canvas where you can write real-time equations to generate flowing waves, sparkles, pulses, and more. It's an ideal tool for testing and perfecting animation logic before deploying it to physical LED hardware like the Cosmic Unicorn or similar devices.
+          The simulator allows you to experiment with mathematical patterns and colour dynamics. The 32×32 LED grid acts as a virtual canvas where you can write equations in real‑time to generate flowing waves, sparkles, pulses and more. It's an ideal tool for perfecting animation logic before deploying it to physical hardware.
         </p>
         <p>
-          Whether you're a hobbyist, an engineer, or just someone who enjoys visual math experiments, this simulator offers a playful and powerful way to bring light-based designs to life.
+          Whether you're a hobbyist, an engineer, or just someone who enjoys visual‑math experiments, this simulator offers a playful and powerful way to bring light‑based designs to life.
         </p>
         <h3>Features</h3>
         <ul>
-          <li><strong>32x32 RGB LED Grid:</strong> Each LED individually controlled.</li>
-          <li><strong>Live Equation Editor:</strong> Input expressions for r, g, b using x, y, t.</li>
-          <li><strong>Real-time Animation:</strong> Frame-by-frame updates.</li>
-          <li><strong>Clear & Submit Buttons:</strong> Easy control.</li>
-          <li><strong>Export:</strong> Download a file that can be imported directly onto your Cosmic Unicorn.</li>
+          <li><strong>32×32 RGB LED Grid:</strong> Each LED individually controlled.</li>
+          <li><strong>Equation Editor:</strong> Python style input expressions for r, g, b using x, y, t</li>
+          <li><strong>Clear &amp; Submit Buttons:</strong> Quick control over equations.</li>
+          <li><strong>Export:</strong> Download a MicroPython script ready for your Cosmic Unicorn.</li>
         </ul>
         <h3>Basic Example</h3>
-        <h4>🔷 Diagonal line (top-left to bottom-right)</h4>
-        <pre><code>
-        r = 0
-        g = 0
-        b = 255 if x == y else 0
-        </code></pre>
+        <pre><code>r = 0
+g = 0
+b = 255 if x == y else 0</code></pre>
       </div>
-      
     </div>
   </div>
+
+  <!-- main logic relies on global math.js (non‑module) -->
   <script src="main.js"></script>
 </body>
 </html>

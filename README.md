@@ -1,63 +1,155 @@
-MatrixKit-Web
+MatrixKit‑Web (a.k.a. “32×32 Light‑Sabotage Simulator”)
 
-MatrixKit-Web is a browser-based LED-matrix sandbox.Type equations, watch pixels dance, export the madness to your Cosmic Unicorn, all without installing anything.
+“If it works first try you aimed too low.” — Me, after 6 blown MOSFETs ⚡️
 
-What it does
+Design LED madness for Pimoroni’s Cosmic Unicorn without ever leaving your browser (or burning your eyebrows).
 
-Real-time 32 × 32 LED simulation in the browser
+Click & play → https://philkit6.github.io/matrixKit-Web/  ← zero installs, zero guilt.
 
-Accepts Python-style equations using x, y, t
+1  Quick tour (60 sec)
 
-One-click export to a MicroPython script for Pimoroni Cosmic Unicorn
+What
 
-Converts browser chaos into hardware chaos (with only a little smoke)
+How
 
-How to play
+⚡ Fire it up
 
-Open https://philkit6.github.io/matrixKit-Web/.
+Open the link; a 512‑pixel grid blinks expectantly.
 
-Enter equations like:
+🎨 Make pixels
 
-r = 255 * Math.sin((x + t) * 0.1)
-g = 0
-b = 0
+Type an expression for r / g / b, smack SUBMIT.
 
-Hit Submit to preview.
+🧽 Regret things
 
-Hit Export to download a .py file you can copy straight to your Unicorn via Thonny.
+CLEAR nukes your sins.
 
-No build step, no flashing firmware every 30 seconds, no regrets (well, fewer regrets).
+🚀 Ship to Pico
 
-Roadmap
+EXPORT → unicorn_export.py → drag onto your Unicorn.
 
-Frame-by-frame export
+Pro‑tip: Break things fearlessly; F5 is cheaper than replacement LEDs.
 
-UI slider for STEP
+2  Expression cheat‑sheet
 
-Equation gallery / history
+Vars → x, y, t, off (off = int(4*sin(t)) so you don’t have to re‑type that ever again).
 
-Fewer ways to crash MicroPython (stretch goal)
+Maths → + - * / **, mod %, comparisons == != < <= > >=.
 
-Known problems
+Logic → and, or, not (because Python said so).
 
-Divide-by-zero → instant void
+Ternary → A if cond else B (reads like English, explodes like C).
 
-Refreshing the page nukes your masterpiece
+Functions → sin cos tan floor abs sqrt log — no math. prefix.
 
-MicroPython occasionally yeets a MemoryError for reasons™
+Expression
 
-eval() everywhere — yes, I know
+Visual sanity check
 
-Built During
+128
 
-Late-night caffeine binges, mild existential dread, and an irresistible urge to make tiny lights do big things.
+Steady grey (“did I crash?”)
 
-Updates & Stories
+255 if x == y else 0
 
-Subscribe to the build log and project updates at After Hours Builds.
+Bright diagonal ✔️
 
-License
+255 if 5 <= x <= 10 else 0
 
-MIT — fork it, fix it, break it, just don’t point the blame at the blinking pixels.
+6‑pixel vertical bar
 
+255 if (x < 16 and y < 16) else 0
+
+Top‑left quadrant
+
+255 if ((x + y) % 2 == 0) else 0
+
+Checkerboard
+
+255 * sin((y + t)*0.5)
+
+Horizontal wave
+
+If expression turns the grid black → You found a parser edge case. Congrats, open an issue so I can procrastinate.
+
+3  What happens on the Pico?
+
+EXPORT spits this (abridged):
+
+from math import sin, cos, floor
+…
+code_r = lambda x,y,t,off,math=math: (<your R>)
+STEP, QUANT = 2, 8  # tweak these, break those
+
+No eval(), just lambdas because RAM isn’t a suggestion on RP2040.
+
+3.1 Speed vs memory
+
+Knob
+
+Faster?
+
+RAM?
+
+Looks?
+
+STEP ↑
+
+✅
+
+✅
+
+Pixelated Minecraft chic
+
+QUANT ↑
+
+↔︎
+
+✅
+
+Slight colour banding
+
+Suggested sweet‑spot → STEP = 2, QUANT = 8 → 50‑60 fps, ~1 k pens.
+
+4  Things that will hurt you
+
+Only single‑line expressions — loops & imports need their own stunt‑ double branch.
+
+Huge colour gamut on full‑res grid → MemoryError.  Raise QUANT, lower STEP, breathe.
+
+Math.js parser isn’t Python’s.  If it yells, wrap conditions in () or swap <= chains to explicit ands.
+
+5  Roadmap 🛣️  (a.k.a. The TODO pile)
+
+Idea
+
+ETA
+
+% Certain
+
+Preset switcher (buttons A‑D)
+
+Q3‑2025
+
+80 %
+
+Palette editor & live LUT
+
+Q4‑2025
+
+60 %
+
+WebUSB → flash Pico direct
+
+2026ish
+
+40 %
+
+AI that writes cooler equations than me
+
+never
+
+5 %
+
+PRs welcome — bonus points for memes in commit messages.
 
