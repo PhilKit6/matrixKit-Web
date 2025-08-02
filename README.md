@@ -67,5 +67,5 @@ PRs welcome — bonus points for memes in commit messages.
 ---
 
 ## 6  License & attribution
-MIT.  Go forth and light stuff on fire (figuratively, please).  Inspired by “Stuff Made Here”: if it doesn’t break once, where’s the fun?
+MIT.  Go forth and light stuff on fire (figuratively, please). 
 
