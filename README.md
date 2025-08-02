@@ -1,4 +1,4 @@
-# MatrixKit‑Web (a.k.a. “32×32 Light‑Sabotage Simulator”)
+# MatrixKit‑Web 
 
 > *“If it works first try you aimed too low.”* — Me, after 6 blown MOSFETs ⚡️
 
