@@ -1,7 +1,6 @@
 # MatrixKit‑Web 
 
-<img width="1237" height="643" alt="image" src="https://github.com/user-attachments/assets/4ede0368-21c5-4d9e-b301-888253ffdb64" />
-
+<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/56c9915f-462d-4eae-ba38-356d5e455db4" />
 
 > *“If it works first try you aimed too low.”* — Me, after 6 blown MOSFETs ⚡️
 
