@@ -82,41 +82,71 @@ clearBtn.onclick = () => {
 };
 
 exportBtn.onclick = () => {
-  const pyScript = `
-from cosmic_unicorn import CosmicUnicorn
+  const eqR = rExpr.replace(/Math\./g, "math.");
+  const eqG = gExpr.replace(/Math\./g, "math.");
+  const eqB = bExpr.replace(/Math\./g, "math.");
+
+  const pyScript = `import time, math, machine
+from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN
-import time, math
 
-cu = CosmicUnicorn()
-graphics = PicoGraphics(display=DISPLAY_COSMIC_UNICORN)
-WIDTH, HEIGHT = cu.WIDTH, cu.HEIGHT
-cu.set_brightness(0.5)
+machine.freq(250_000_000)
+cu  = CosmicUnicorn()
+gfx = PicoGraphics(display=DISPLAY_COSMIC_UNICORN)
+W, H = cu.WIDTH, cu.HEIGHT
+cu.set_brightness(0.6)
 
-def compute_color(x, y, t):
-    try:
-        r = ${rExpr.replace(/Math\./g, "")}
-        g = ${gExpr.replace(/Math\./g, "")}
-        b = ${bExpr.replace(/Math\./g, "")}
-    except:
-        r = g = b = 0
-    return max(0, min(255, int(r))), max(0, min(255, int(g))), max(0, min(255, int(b)))
+# ------------ equations-------------
+EQ_R = "${eqR}"
+EQ_G = "${eqG}"
+EQ_B = "${eqB}"
+# -------------------------------------------------------------
 
-t = 0
+code_r = eval("lambda x,y,t,off,math=math: " + EQ_R)
+code_g = eval("lambda x,y,t,off,math=math: " + EQ_G)
+code_b = eval("lambda x,y,t,off,math=math: " + EQ_B)
+
+STEP = 3          # 1=full res, 2=16×16 grid, 4=8×8 grid
+
+BLACK = gfx.create_pen(0, 0, 0)
+pen_cache = {}                     # (r,g,b)→ pen id
+
+def quantize(v, step=16):
+    return int(v // step) * step
+
+def pen(r, g, b):
+    r, g, b = quantize(r), quantize(g), quantize(b)
+    key = (r, g, b)
+    if key not in pen_cache:
+        pen_cache[key] = gfx.create_pen(r, g, b)
+    return pen_cache[key]
+
+t = 0.0
 while True:
-    for y in range(HEIGHT):
-        for x in range(WIDTH):
-            r, g, b = compute_color(x, y, t)
-            cu.set_pixel(x, y, r, g, b)
-    cu.update()
-    t += 0.1
-    time.sleep(0.03)
+    off = int(4 * math.sin(t))
+
+    gfx.set_pen(BLACK)
+    gfx.clear()
+
+    for y in range(0, H, STEP):
+        for x in range(0, W, STEP):
+            r = int(code_r(x, y, t, off)) & 255
+            g = int(code_g(x, y, t, off)) & 255
+            b = int(code_b(x, y, t, off)) & 255
+            gfx.set_pen(pen(r, g, b))
+            gfx.rectangle(x, y, STEP, STEP)     # fill STEP×STEP block
+
+    cu.update(gfx)
+    t += 0.15
+    time.sleep(0.003)
 `;
 
   const blob = new Blob([pyScript], { type: "text/x-python" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "cosmic_unicorn_export.py";
+  a.download = "unicorn_export.py";
   a.click();
 };
+
 
 draw();
