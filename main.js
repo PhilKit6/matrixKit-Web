@@ -1,152 +1,169 @@
-const canvas = document.getElementById("ledCanvas");
-const ctx = canvas.getContext("2d");
+;(function(){
+  const canvas    = document.getElementById("ledCanvas");
+  const ctx       = canvas.getContext("2d");
+  const width     = 32, height = 32;
+  const pixelSize = canvas.width / width;
 
-const width = 32;
-const height = 32;
-const pixelSize = canvas.width / width;
+  let t = 0;
+  const rInput = document.getElementById("r-input");
+  const gInput = document.getElementById("g-input");
+  const bInput = document.getElementById("b-input");
+  const submitBtn = document.getElementById("submit");
+  const clearBtn  = document.getElementById("clear");
+  const exportBtn = document.getElementById("export");
+  const statusMsg = document.getElementById("statusMsg");
+  const errorMsg  = document.getElementById("errorMsg");
 
-let t = 0;
-
-// Inputs
-const rInput = document.getElementById("r-input");
-const gInput = document.getElementById("g-input");
-const bInput = document.getElementById("b-input");
-
-// Buttons
-const submitBtn = document.getElementById("submit");
-const clearBtn = document.getElementById("clear");
-const exportBtn = document.getElementById("export");
-
-let rExpr = rInput.value;
-let gExpr = gInput.value;
-let bExpr = bInput.value;
-
-function preprocessPythonStyle(expr) {
+  // Helper: convert Python-ish to JS math.js syntax
+ function pyToJs(expr) {
   return expr
-    .replace(/math\./gi, 'Math.')
-    .replace(/\bint\(/g, 'Math.floor(')
-    .replace(/\babs\(/g, 'Math.abs(')
-    .replace(/\bround\(/g, 'Math.round(')
-    .replace(/\bmin\(/g, 'Math.min(')
-    .replace(/\bmax\(/g, 'Math.max(')
-    .replace(/\bpi\b/g, 'Math.PI')
-    .replace(/\be\b/g, 'Math.E')
-    .replace(/\band\b/g, '&&')
-    .replace(/\bor\b/g, '||')
+    // 1) Expand chained comparisons A <= B <= C  →  (B >= A) && (B <= C)
     .replace(
-      /([^?;]+?)\s+if\s+([^?;]+?)\s+else\s+([^?;]+)/g,
+      /([^\s<>=!]+)\s*<=\s*([^\s<>=!]+)\s*<=\s*([^\s<>=!]+)/g,
+      '($2 >= $1) && ($2 <= $3)'
+    )
+    // 2) Convert Python ternary A if cond else B → (cond) ? (A) : (B)
+    .replace(
+      /(.+?)\s+if\s+(.+?)\s+else\s+(.+)/g,
       '($2) ? ($1) : ($3)'
-    );
+    )
+    // 3) Boolean ops
+    .replace(/\band\b/g, '&&')
+    .replace(/\bor\b/g,  '||')
+    .replace(/\bnot\b/g, '!')
+    // 4) Constants
+    .replace(/\bpi\b/g, 'PI')
+    .replace(/\be\b/g,  'E')
+    ;
 }
 
-function clamp(val) {
-  return Math.max(0, Math.min(255, parseInt(val)));
-}
+  function clamp(v){ return Math.max(0, Math.min(255, Math.floor(v))); }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Compile placeholders
+  let rFn = () => 0, gFn = () => 0, bFn = () => 0;
 
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      let scope = { x, y, t };
-      let r = 0, g = 0, b = 0;
-      try {
-        r = clamp(eval(preprocessPythonStyle(rExpr)));
-        g = clamp(eval(preprocessPythonStyle(gExpr)));
-        b = clamp(eval(preprocessPythonStyle(bExpr)));
-      } catch {
-        r = g = b = 0;
-      }
-
-      ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-      ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-      ctx.strokeStyle = "#111";
-      ctx.strokeRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+  // On Submit: compile with math.js
+  submitBtn.addEventListener("click", ()=>{
+    statusMsg.textContent = errorMsg.textContent = "";
+    try {
+      const rExpr = pyToJs(rInput.value);
+      const gExpr = pyToJs(gInput.value);
+      const bExpr = pyToJs(bInput.value);
+      rFn = math.compile(rExpr);
+      gFn = math.compile(gExpr);
+      bFn = math.compile(bExpr);
+      statusMsg.textContent = "Compiled ✓";
+    } catch(e) {
+      errorMsg.textContent = "Error: " + e.message;
     }
-  }
+  });
 
-  t += 0.1;
-  requestAnimationFrame(draw);
-}
+  clearBtn.addEventListener("click", ()=>{
+    rInput.value = gInput.value = bInput.value = "0";
+    rFn = ()=>0; gFn = ()=>0; bFn = ()=>0;
+    statusMsg.textContent = errorMsg.textContent = "";
+  });
 
-// Event listeners
-submitBtn.onclick = () => {
-  rExpr = rInput.value;
-  gExpr = gInput.value;
-  bExpr = bInput.value;
-};
+  exportBtn.addEventListener("click", ()=>{
+    // convert back to Python syntax
+    const toPy = s => s
+      .replace(/PI/g, 'math.pi')
+      .replace(/E/g, 'math.e')
+      .replace(/and/g, 'and')
+      .replace(/or/g, 'or');
 
-clearBtn.onclick = () => {
-  rInput.value = gInput.value = bInput.value = "0";
-  rExpr = gExpr = bExpr = "0";
-};
+    const pyR = toPy(rInput.value);
+    const pyG = toPy(gInput.value);
+    const pyB = toPy(bInput.value);
 
-exportBtn.onclick = () => {
-  const eqR = rExpr.replace(/Math\./g, "math.");
-  const eqG = gExpr.replace(/Math\./g, "math.");
-  const eqB = bExpr.replace(/Math\./g, "math.");
-
-  const pyScript = `import time, math, machine
+    const pyScript = `import time, math, machine
 from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN
+from math import sin, cos, floor
 
-machine.freq(250_000_000)
+# ─── Hardware setup ───────────────────────────────────────────────
+machine.freq(250_000_000)                # over-clock (optional)
 cu  = CosmicUnicorn()
 gfx = PicoGraphics(display=DISPLAY_COSMIC_UNICORN)
 W, H = cu.WIDTH, cu.HEIGHT
 cu.set_brightness(0.6)
 
-# ------------ equations-------------
-EQ_R = "${eqR}"
-EQ_G = "${eqG}"
-EQ_B = "${eqB}"
-# -------------------------------------------------------------
+# ─── Your colour equations, pre-compiled as lambdas ───────────────
+# Note: use math.sin(), not sin()
+code_r = lambda x,y,t,off,math=math: (${pyR})
+code_g = lambda x,y,t,off,math=math: (${pyG})
+code_b = lambda x,y,t,off,math=math: (${pyB})
 
-code_r = eval("lambda x,y,t,off,math=math: " + EQ_R)
-code_g = eval("lambda x,y,t,off,math=math: " + EQ_G)
-code_b = eval("lambda x,y,t,off,math=math: " + EQ_B)
-
-STEP = 3          # 1=full res, 2=16×16 grid, 4=8×8 grid
-
+# ─── Pen management with quantization ─────────────────────────────
 BLACK = gfx.create_pen(0, 0, 0)
-pen_cache = {}                     # (r,g,b)→ pen id
+pen_cache = {}
+STEP = 2   # block size
 
-def quantize(v, step=16):
-    return int(v // step) * step
+def quantize(v, step=8):
+    """Round v down to nearest multiple of step"""
+    return (v // step) * step
 
-def pen(r, g, b):
-    r, g, b = quantize(r), quantize(g), quantize(b)
-    key = (r, g, b)
+def get_pen(r, g, b):
+    qr = quantize(r)
+    qg = quantize(g)
+    qb = quantize(b)
+    key = (qr, qg, qb)
     if key not in pen_cache:
-        pen_cache[key] = gfx.create_pen(r, g, b)
+        pen_cache[key] = gfx.create_pen(qr, qg, qb)
     return pen_cache[key]
 
+# ─── Main animation loop ──────────────────────────────────────────
 t = 0.0
 while True:
     off = int(4 * math.sin(t))
 
-    gfx.set_pen(BLACK)
+    # clear screen once
+    gfx.set_pen(get_pen(0, 0, 0))
     gfx.clear()
 
-    for y in range(0, H, STEP):
-        for x in range(0, W, STEP):
-            r = int(code_r(x, y, t, off)) & 255
-            g = int(code_g(x, y, t, off)) & 255
-            b = int(code_b(x, y, t, off)) & 255
-            gfx.set_pen(pen(r, g, b))
-            gfx.rectangle(x, y, STEP, STEP)     # fill STEP×STEP block
+    # draw in STEP×STEP blocks
+    for yy in range(0, H, STEP):
+        for xx in range(0, W, STEP):
+            r = int(code_r(xx, yy, t, off)) & 255
+            g = int(code_g(xx, yy, t, off)) & 255
+            b = int(code_b(xx, yy, t, off)) & 255
+
+            gfx.set_pen(get_pen(r, g, b))
+            gfx.rectangle(xx, yy, STEP, STEP)
 
     cu.update(gfx)
     t += 0.15
-    time.sleep(0.003)
+    time.sleep(0.005)  # keep USB/REPL happy
 `;
 
-  const blob = new Blob([pyScript], { type: "text/x-python" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "unicorn_export.py";
-  a.click();
-};
+    const blob = new Blob([pyScript], { type: "text/x-python" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "unicorn_export.py";
+    a.click();
+  });
 
-
-draw();
+  // Animation loop
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const off = Math.floor(4 * Math.sin(t));
+    for(let y=0;y<height;y++){
+      for(let x=0;x<width;x++){
+        const scope = { x, y, t, off };
+        let r=g=b=0;
+        try {
+          r = clamp(rFn.evaluate(scope));
+          g = clamp(gFn.evaluate(scope));
+          b = clamp(bFn.evaluate(scope));
+        } catch {
+          r=g=b=0;
+        }
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(x*pixelSize,y*pixelSize,pixelSize,pixelSize);
+      }
+    }
+    t += 0.1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
