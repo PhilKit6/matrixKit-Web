@@ -2,7 +2,7 @@
 
 <img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/56c9915f-462d-4eae-ba38-356d5e455db4" />
 
-> *“If it works first try you aimed too low.”* — Me, after 6 blown MOSFETs ⚡️
+> *NOTE: Only tested on the original Cosmic Unicorn NOT Pico 2 W
 
 Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving your browser (or burning your eyebrows).
 
