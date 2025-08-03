@@ -13,7 +13,7 @@ Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving yo
 ## Quick tour (60 sec)
 | What | How |
 |------|-----|
-| ⚡ Fire it up | Open the link; a 512‑pixel grid blinks expectantly. |
+| ⚡ Fire it up | Open the link; a 1024‑pixel grid waits expectantly. |
 | 🎨 Make pixels | Type an expression for **r / g / b**, smack **SUBMIT**. |
 | 🧽 Regret things | **CLEAR** nukes your sins. |
 | 🚀 Ship to Pico | **EXPORT** → `unicorn_export.py` → drag into Thonny → rename `main.py` → Profit. |
