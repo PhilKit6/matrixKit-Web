@@ -23,11 +23,6 @@ Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving yo
 ---
 
 ## Expression cheat‑sheet
-* Vars → `x`, `y`, `t`.
-* Maths → `+ - * / **`, mod `%`, comparisons `== != < <= > >=`.
-* Logic → `and`, `or`, `not` (because Python said so).
-* Ternary → `A if cond else B` (reads like English, explodes like C).
-* Functions → `sin cos tan floor abs sqrt log` — no `math.` prefix.
 
 | Expression | Visual sanity check |
 |------------|--------------------|
