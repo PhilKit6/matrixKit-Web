@@ -23,14 +23,6 @@ Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving yo
 ---
 
 ## Expression cheat‑sheet
-<<<<<<< HEAD
-* Vars → `x`, `y`, `t`.
-* Maths → `+ - * / **`, mod `%`, comparisons `== != < <= > >=`.
-* Logic → `and`, `or`, `not` (because Python said so).
-* Ternary → `A if cond else B` (reads like English, explodes like C).
-* Functions → `sin cos tan floor abs sqrt log` — no `math.` prefix.
-=======
->>>>>>> e6394ad212789e529214155e2302d073e61a9ca2
 
 | Expression | Visual sanity check |
 |------------|--------------------|
@@ -42,20 +34,12 @@ Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving yo
 If expression turns the grid black → You found a parser edge case. Congrats, open an issue so I can procrastinate.
 
 ---
-<<<<<<< HEAD
-### ✅ Supported Expressions
-=======
 ### Supported Expressions
->>>>>>> e6394ad212789e529214155e2302d073e61a9ca2
 
 | **Type** | **Example** | **Will It Work?** | **Why It Works** |
 |----------|-------------|-------------------|------------------|
 | Math operations | `sin(x + t)` | ✅ | Recognized and translated to `Math.sin(x + t)` |
 | Conditionals (Python-style) | `255 if x < 10 else 0` | ✅ | Transformed to JS ternary: `(x < 10) ? (255) : (0)` |
-<<<<<<< HEAD
-| Boolean logic | `255 if x < 10 and y > 5 else 0` | ✅ | `and` → `&&`, `or` → `||`, `not` → `!` |
-=======
->>>>>>> e6394ad212789e529214155e2302d073e61a9ca2
 | Chained comparisons | `10 <= x <= 20` | ✅ | Becomes `(x >= 10) && (x <= 20)` |
 | Constants | `pi`, `e` | ✅ | Rewritten as `PI`, `E` for math.js |
 | Time-based animation | `128 + 127 * sin(t)` | ✅ | `t` is a changing variable in the scope |
@@ -64,11 +48,7 @@ If expression turns the grid black → You found a parser edge case. Congrats, o
 
 ---
 
-<<<<<<< HEAD
-### ❌ Unsupported or Problematic Expressions
-=======
 ### Unsupported or Problematic Expressions
->>>>>>> e6394ad212789e529214155e2302d073e61a9ca2
 
 | **Type** | **Example** | **Will It Work?** | **Why It Fails or Breaks** |
 |----------|-------------|-------------------|-----------------------------|
@@ -82,11 +62,7 @@ If expression turns the grid black → You found a parser edge case. Congrats, o
 
 ---
 
-<<<<<<< HEAD
-### ⚠️ Partial Support
-=======
 ### Partial Support
->>>>>>> e6394ad212789e529214155e2302d073e61a9ca2
 
 | **Type** | **Example** | **Will It Work?** | **Notes** |
 |----------|-------------|-------------------|-----------|
