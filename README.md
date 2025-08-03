@@ -39,13 +39,12 @@ Design LED madness for Pimoroni’s **Cosmic Unicorn** without ever leaving yo
 If expression turns the grid black → You found a parser edge case. Congrats, open an issue so I can procrastinate.
 
 ---
-### ✅ Supported Expressions
+### Supported Expressions
 
 | **Type** | **Example** | **Will It Work?** | **Why It Works** |
 |----------|-------------|-------------------|------------------|
 | Math operations | `sin(x + t)` | ✅ | Recognized and translated to `Math.sin(x + t)` |
 | Conditionals (Python-style) | `255 if x < 10 else 0` | ✅ | Transformed to JS ternary: `(x < 10) ? (255) : (0)` |
-| Boolean logic | `255 if x < 10 and y > 5 else 0` | ✅ | `and` → `&&`, `or` → `||`, `not` → `!` |
 | Chained comparisons | `10 <= x <= 20` | ✅ | Becomes `(x >= 10) && (x <= 20)` |
 | Constants | `pi`, `e` | ✅ | Rewritten as `PI`, `E` for math.js |
 | Time-based animation | `128 + 127 * sin(t)` | ✅ | `t` is a changing variable in the scope |
@@ -54,7 +53,7 @@ If expression turns the grid black → You found a parser edge case. Congrats, o
 
 ---
 
-### ❌ Unsupported or Problematic Expressions
+### Unsupported or Problematic Expressions
 
 | **Type** | **Example** | **Will It Work?** | **Why It Fails or Breaks** |
 |----------|-------------|-------------------|-----------------------------|
@@ -68,7 +67,7 @@ If expression turns the grid black → You found a parser edge case. Congrats, o
 
 ---
 
-### ⚠️ Partial Support
+### Partial Support
 
 | **Type** | **Example** | **Will It Work?** | **Notes** |
 |----------|-------------|-------------------|-----------|
