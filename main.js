@@ -31,6 +31,7 @@
     .replace(/\band\b/g, '&&')
     .replace(/\bor\b/g,  '||')
     .replace(/\bnot\b/g, '!')
+    .replace(/\^/g, '**')
     // 4) Constants
     .replace(/\bpi\b/g, 'PI')
     .replace(/\be\b/g,  'E')
