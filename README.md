@@ -94,8 +94,6 @@ Suggested sweet‑spot → `STEP = 2`, `QUANT = 8` → 50‑60 fps, ~1 k pen
 | WebUSB → flash Pico direct | 2026ish | 40 % |
 | AI that writes cooler equations than me | never | 5 % |
 
-PRs welcome — bonus points for memes in commit messages.
-
 ---
 
 
